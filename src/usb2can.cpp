@@ -31,21 +31,31 @@ USB2CAN::~USB2CAN()
 // 打开并配置串口，启动读线程
 bool USB2CAN::openUSB2CAN() 
 {
-    fd = open(portName.c_str(), O_RDWR | O_NOCTTY | O_SYNC);
+    fd = open(portName.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
     if (fd < 0) 
     {
-        std::cerr << "Failed to open " << portName << std::endl;
+        std::cerr << "无法打开设备 " << portName << ": " << strerror(errno) << std::endl;
         return false;
     }
 
-    if (!configurePort()) {
+    // 清除非阻塞标志，后续读取操作阻塞等待数据
+    int flags = fcntl(fd, F_GETFL, 0);
+    if (flags >= 0) 
+    {
+        fcntl(fd, F_SETFL, flags & ~O_NONBLOCK);
+    }
+
+    if (!configurePort()) 
+    {
+        std::cerr << "串口配置失败！" << std::endl;
         close(fd);
-        fd = -1;
         return false;
     }
 
     running = true;
     readerThread = std::thread(&USB2CAN::readThreadFunc, this);
+
+    std::cout << "设备打开成功：" << portName << std::endl;
     return true;
 }
 
@@ -64,56 +74,45 @@ void USB2CAN::closeUSB2CAN()
 // 配置串口参数（使用 termios），设定波特率、数据位、无校验等
 bool USB2CAN::configurePort() 
 {
-    struct termios tty {};
+    struct termios tty;
     if (tcgetattr(fd, &tty) != 0) 
     {
-        std::cerr << "tcgetattr failed\n";
+        std::cerr << "获取串口参数失败: " << strerror(errno) << std::endl;
         return false;
     }
 
-    cfsetospeed(&tty, baudrate); 
-    cfsetispeed(&tty, baudrate);
-    
+    // 输入模式
+    tty.c_iflag = 0;
 
-    tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;     // 8位数据
-    tty.c_iflag &= ~IGNBRK;                         // 收到 BREAK 信号时不忽略
-    tty.c_lflag = 0;                                // 关闭终端模式
-    tty.c_oflag = 0;                                // 禁止输出处理
-    tty.c_cc[VMIN] = 1;                             // 最少读取一个字节
-    tty.c_cc[VTIME] = 1;                            // 超时1*0.1s
+    // 输出模式
+    tty.c_oflag = 0;
 
-    tty.c_iflag &= ~(IXON | IXOFF | IXANY);         // 关闭软件流控
-    tty.c_cflag |= (CLOCAL | CREAD);                // 开启接收
-    tty.c_cflag &= ~(PARENB | PARODD);              // 无奇偶校验
-    tty.c_cflag &= ~CSTOPB;                         // 1位停止位
-    tty.c_cflag &= ~CRTSCTS;                        // 关闭硬件流控
+    // 控制模式：本地连接、启用接收、8位数据位、无校验位
+    tty.c_cflag = CREAD | CLOCAL | CS8;
 
-    if (tcsetattr(fd, TCSANOW, &tty) != 0) 
-    {
-        std::cerr << "tcsetattr failed\n";
+    // 关闭硬件流控
+    tty.c_cflag &= ~CRTSCTS;
+
+    // 屏蔽软件流控
+    tty.c_iflag &= ~(IXON | IXOFF | IXANY);
+
+    // 本地模式（不使用 canonical 模式）
+    tty.c_lflag = 0;
+
+    // 设置读取超时
+    tty.c_cc[VMIN] = 0;
+    tty.c_cc[VTIME] = 10; // 1 秒超时
+
+    // 设置波特率
+    cfsetispeed(&tty, B921600);
+    cfsetospeed(&tty, B921600);
+
+    if (tcsetattr(fd, TCSANOW, &tty) != 0) {
+        std::cerr << "设置串口参数失败: " << strerror(errno) << std::endl;
         return false;
     }
 
     return true;
-}
-
-// CAN帧转USB串口发送格式
-std::string USB2CAN::frameToString(const CanFrame& frame) 
-{
-    std::string result;
-    result += 0xA5;                                             // 帧头
-    result += static_cast<char>(0xB0 | frame.m_CANChannel);     // 类型+端口
-    result += static_cast<char>(frame.id);                      // ID
-
-    for (int i = 0; i < frame.dlc; ++i) 
-    {
-        result += static_cast<char>(frame.data[i]);
-    }
-
-    uint8_t crc = computeCRC(reinterpret_cast<const uint8_t*>(&result[1]), frame.dlc + 2);  // 类型+ID+数据
-    result += static_cast<char>(crc);                                                       // CRC 校验
-
-    return result;
 }
 
 // 通过USB发送CAN报文

@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/usb2can.dir/src/usb2can.cpp.obj"
-  "CMakeFiles/usb2can.dir/src/usb2can.cpp.obj.d"
+  "CMakeFiles/usb2can.dir/src/usb2can.cpp.o"
   "libusb2can.a"
   "libusb2can.pdb"
 )

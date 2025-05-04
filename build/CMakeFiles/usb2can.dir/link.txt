@@ -1,2 +1,2 @@
-D:\MinGw64\MinGW\bin\ar.exe qc libusb2can.a CMakeFiles/usb2can.dir/src/usb2can.cpp.obj
-D:\MinGw64\MinGW\bin\ranlib.exe libusb2can.a
+/usr/bin/ar qc libusb2can.a  CMakeFiles/usb2can.dir/src/usb2can.cpp.o
+/usr/bin/ranlib libusb2can.a
