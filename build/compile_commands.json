@@ -1,0 +1,14 @@
+[
+{
+  "directory": "F:/Program_Store/CPP/USB2CAN/build",
+  "command": "D:\\MinGw64\\MinGW\\bin\\g++.exe  @CMakeFiles/usb2can.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\usb2can.dir\\src\\usb2can.cpp.obj -c F:\\Program_Store\\CPP\\USB2CAN\\src\\usb2can.cpp",
+  "file": "F:/Program_Store/CPP/USB2CAN/src/usb2can.cpp",
+  "output": "CMakeFiles/usb2can.dir/src/usb2can.cpp.obj"
+},
+{
+  "directory": "F:/Program_Store/CPP/USB2CAN/build",
+  "command": "D:\\MinGw64\\MinGW\\bin\\g++.exe  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\main.dir\\src\\main.cpp.obj -c F:\\Program_Store\\CPP\\USB2CAN\\src\\main.cpp",
+  "file": "F:/Program_Store/CPP/USB2CAN/src/main.cpp",
+  "output": "CMakeFiles/main.dir/src/main.cpp.obj"
+}
+]
