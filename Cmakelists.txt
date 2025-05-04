@@ -9,5 +9,5 @@ add_library(usb2can STATIC
     src/usb2can.cpp
 )
 
-add_executable(main examples/main.cpp)
+add_executable(main src/main.cpp)
 target_link_libraries(main usb2can pthread)
