@@ -8,7 +8,7 @@
  * @
  */
 
- #ifndef USB2CAN_H
+#ifndef USB2CAN_H
 #define USB2CAN_H
 
 #include <string>

@@ -1,93 +1,64 @@
 #include "usb2can.h"
-#include <iostream>
 #include <csignal>
+#include <iostream>
+#include <thread>
+#include <chrono>
 
-// std::atomic<bool> keepRunning(true);
+volatile bool keepRunning = true;
+void signalHandler(int signum) { keepRunning = false; }
 
-// void signalHandler(int)
-// {
-//     keepRunning = false;
-//     std::cout << "\n终止程序..." << std::endl;
-// }
+int main()
+{
+    std::signal(SIGINT, signalHandler);
 
-// int main()
-// {
-//     // 捕获 Ctrl+C 等终止信号
-//     std::signal(SIGINT, signalHandler);
-
-//     // 创建 USB2CAN 对象，使用默认串口和波特率
-//     USB2CAN usb2can("/dev/ttyACM0");
-
-//     // 打开串口设备
-//     if (!usb2can.openUSB2CAN())
-//     {
-//         std::cerr << "无法打开 USB2CAN 设备" << std::endl;
-//         return -1;
-//     }
-
-//     std::cout << "USB2CAN 设备已打开，开始监听 CAN 报文..." << std::endl;
-
-//     // 主循环，不断读取队列中的 CAN 报文
-//     while (keepRunning)
-//     {
-//         CanFrame frame;
-//         if (usb2can.readUSB2CAN(frame))
-//         {
-//             std::cout << "接收到报文: "
-//                       << "ID: 0x" << std::hex << frame.id
-//                       << " DLC: " << std::dec << (int)frame.dlc
-//                       << " Data: ";
-
-//             for (int i = 0; i < frame.dlc; ++i)
-//                 std::cout << std::hex << std::uppercase << (int)frame.data[i] << " ";
-
-//             std::cout << " Channel: " << ((frame.m_CANChannel == CAN_Channel1) ? "CAN1" : "CAN2") << std::endl;
-//         }
-
-//         // 延时避免高 CPU 占用
-//         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//     }
-
-//     usb2can.closeUSB2CAN();
-//     std::cout << "已关闭 USB2CAN 设备" << std::endl;
-//     return 0;
-// }
-
-int main() {
-    USB2CAN usb2can("/dev/ttyACM0", 921600);  // 根据实际串口名修改
-
-    if (!usb2can.openUSB2CAN()) {
-        std::cerr << "Failed to open USB2CAN device." << std::endl;
+    USB2CAN usb2can("/dev/ttyACM0");
+    if (!usb2can.openUSB2CAN())
+    {
+        std::cerr << "无法打开 USB2CAN 设备" << std::endl;
         return -1;
     }
 
-    std::cout << "Device opened successfully." << std::endl;
+    std::cout << "USB2CAN 已启动，开始发送和接收测试..." << std::endl;
 
-    CanFrame frame;
-    frame.dlc = 8;
-    frame.m_CANType = Classic_CAN;
-    frame.m_CANChannel = CAN_Channel1;
+    // 发送线程
+    std::thread sender([&usb2can]() {
+        CanFrame testFrame;
+        testFrame.m_CANChannel = CAN_Channel1;
+        testFrame.m_CANType = Extended_CAN; // 可切换 Classic_CAN
+        testFrame.id = 0x1ABCDE3;
+        testFrame.dlc = 8;
+        for (int i = 0; i < 8; ++i)
+            testFrame.data[i] = i + 1;
 
-    // 填充固定数据
-    for (int i = 0; i < 8; ++i) {
-        frame.data[i] = i;
-    }
+        while (keepRunning)
+        {
+            usb2can.sendUSB2CAN(testFrame);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
+    });
 
-    // 连续发送100个报文
-    for (uint32_t i = 0; i < 100; ++i) {
-        frame.id = i;
-
-        if (!usb2can.sendUSB2CAN(frame)) {
-            std::cerr << "Failed to send frame with ID: " << i << std::endl;
-        } else {
-            std::cout << "Sent frame with ID: " << i << std::endl;
+    // 接收线程
+    while (keepRunning)
+    {
+        CanFrame recvFrame;
+        if (usb2can.readUSB2CAN(recvFrame))
+        {
+            std::cout << "[接收] "
+                      << ((recvFrame.m_CANType == Extended_CAN) ? "扩展帧" : "标准帧")
+                      << " | 通道: " << ((recvFrame.m_CANChannel == CAN_Channel1) ? "CAN1" : "CAN2")
+                      << " | ID: 0x" << std::hex << recvFrame.id
+                      << " | 长度: " << std::dec << (int)recvFrame.dlc
+                      << " | 数据: ";
+            for (int i = 0; i < recvFrame.dlc; ++i)
+                std::cout << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << (int)recvFrame.data[i] << " ";
+            std::cout << std::dec << std::endl;
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));  // 20ms 间隔
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
+    sender.join();
     usb2can.closeUSB2CAN();
-    std::cout << "Device closed." << std::endl;
-
+    std::cout << "测试结束，已关闭 USB2CAN" << std::endl;
     return 0;
 }
