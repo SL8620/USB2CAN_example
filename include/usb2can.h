@@ -1,7 +1,7 @@
 /*** 
  * @Author: SL8620
  * @Date: 2025-04-30 16:09:55
- * @LastEditTime: 2025-05-04 15:53:33
+ * @LastEditTime: 2025-05-10 14:32:08
  * @LastEditors: SL8620
  * @Description: 
  * @FilePath: \USB2CAN\include\usb2can.h
@@ -19,10 +19,10 @@
 #include <cstdint>
 #include <vector>
 
-enum CanType
+enum CanIdType
 {
-    Classic_CAN,
-    Extended_CAN
+    CanId_Classic,
+    CanId_Extended
 };
 
 enum CanChannel
@@ -37,7 +37,7 @@ struct CanFrame
     uint8_t dlc;
     uint8_t data[8];
 
-    CanType m_CANType;
+    CanIdType m_CanIdType;
     CanChannel m_CANChannel;
 };
 

@@ -1,7 +1,7 @@
 /*** 
  * @Author: SL8620
  * @Date: 2025-04-30 16:09:37
- * @LastEditTime: 2025-05-04 15:54:22
+ * @LastEditTime: 2025-05-10 14:50:17
  * @LastEditors: SL8620
  * @Description: 
  * @FilePath: \USB2CAN\src\usb2can.cpp
@@ -122,18 +122,17 @@ bool USB2CAN::sendUSB2CAN(const CanFrame& frame)
 
     std::vector<uint8_t> buffer;
 
-    // 头部：0xB0 | 通道号
-    uint8_t portByte = 0xB0 | static_cast<uint8_t>(frame.m_CANChannel);
-    buffer.push_back(portByte);
+    // 帧头（CAN通道）
+    uint8_t head = (frame.m_CANChannel == CAN_Channel1) ? 0xB1 : 0xB2;
+    buffer.push_back(head);
 
-    if (frame.m_CANType == Classic_CAN) 
+    // AB 字节：高4位为数据长度，低1位为 ID 类型
+    uint8_t ab = ((frame.dlc & 0x0F) << 4) | (frame.m_CanIdType == CanId_Extended ? 0x01 : 0x00);
+    buffer.push_back(ab);
+
+    // ID（标准1字节，扩展4字节）
+    if (frame.m_CanIdType == CanId_Extended) 
     {
-        // 标准 CAN: ID 1 字节
-        buffer.push_back(static_cast<uint8_t>(frame.id & 0xFF));
-    } 
-    else if (frame.m_CANType == Extended_CAN) 
-    {
-        // 扩展 CAN: ID 4 字节（大端序）
         buffer.push_back((frame.id >> 24) & 0xFF);
         buffer.push_back((frame.id >> 16) & 0xFF);
         buffer.push_back((frame.id >> 8) & 0xFF);
@@ -141,16 +140,14 @@ bool USB2CAN::sendUSB2CAN(const CanFrame& frame)
     } 
     else 
     {
-        return false; // 未知类型
+        buffer.push_back(frame.id & 0xFF);
     }
 
-    // 数据段
-    for (uint8_t i = 0; i < frame.dlc; ++i) 
+    // 数据
+    for (int i = 0; i < frame.dlc; ++i)
     {
         buffer.push_back(frame.data[i]);
     }
-
-    // 总长度检查
     ssize_t written = write(fd, buffer.data(), buffer.size());
     return written == static_cast<ssize_t>(buffer.size());
 }
@@ -171,8 +168,8 @@ bool USB2CAN::readUSB2CAN(CanFrame& frame)
 // 后台线程：从串口读取原始字节，处理粘包拆包，解析成CanFrame并入队
 void USB2CAN::readThreadFunc() 
 {
-    uint8_t buffer[256];    // 数据缓存区
-    size_t bufPos = 0;      // 缓存长度
+    uint8_t buffer[256];
+    size_t bufPos = 0;
 
     while (running) 
     {
@@ -181,38 +178,62 @@ void USB2CAN::readThreadFunc()
         {
             bufPos += n;
             size_t i = 0;
-            // 循环提取所有完整帧
-            while (bufPos - i >= 12) 
+
+            while (bufPos - i >= 6) // 最小长度校验
             {
-                // 查找帧头0xA5
                 if (buffer[i] != 0xA5) 
                 {
                     ++i;
                     continue;
                 }
-                // 检查帧尾0x5A
-                if (buffer[i + 11] != 0x5A) 
-                {
+
+                if (i + 3 >= bufPos) break;
+
+                uint8_t cmd = buffer[i + 1]; // 0xB0 | port
+                uint8_t ab  = buffer[i + 2];
+                uint8_t dlc = (ab >> 4) & 0x0F;
+                bool isExt  = (ab & 0x01);
+                uint8_t idLen = isExt ? 4 : 1;
+
+                size_t frameLen = 1 + 1 + 1 + idLen + dlc + 1; // A5 + cmd + ab + id + data + 5A
+
+                if (bufPos - i < frameLen) break; // 不完整帧
+
+                if (buffer[i + frameLen - 1] != 0x5A) {
                     ++i;
                     continue;
                 }
 
-                // 构造一条有效帧
+                // 正确帧，开始解析
                 CanFrame frame;
-                frame.m_CANChannel = (buffer[i + 1] & 0x0F) == 1 ? CAN_Channel1 : CAN_Channel2;
-                frame.id           = buffer[i + 2];              // 标准ID
-                frame.dlc          = 8;                          // 固定8字节
-                memcpy(frame.data, buffer + i + 3, 8);           // 拷贝数据
-                frame.m_CANType    = Classic_CAN;
+                frame.m_CANChannel = ((cmd & 0x0F) == 1) ? CAN_Channel1 : CAN_Channel2;
+                frame.dlc = dlc;
+                frame.m_CanIdType = isExt ? CanId_Extended : CanId_Classic;
 
-                // 入队
+                if (isExt) 
+                {
+                    // 解析扩展 ID（4 字节）
+                    frame.id = (buffer[i + 3] << 24) | (buffer[i + 4] << 16) |
+                            (buffer[i + 5] << 8) | buffer[i + 6];
+                    // 数据段从 id 后面的 4 字节开始
+                    memcpy(frame.data, buffer + i + 7, dlc);  // id 后面是 4 字节 ID，再加上数据
+                } 
+                else 
+                {
+                    // 解析标准 ID（1 字节）
+                    frame.id = buffer[i + 3];
+                    // 数据段从 id 后面 1 字节开始
+                    memcpy(frame.data, buffer + i + 4, dlc);  // id 后面是 1 字节 ID，再加上数据
+                }
+
                 {
                     std::lock_guard<std::mutex> lock(queueMutex);
                     recvQueue.push(frame);
                 }
-                i += 12;  // 跳过已处理帧
+
+                i += frameLen;
             }
-            // 移除已处理字节
+
             if (i > 0) 
             {
                 memmove(buffer, buffer + i, bufPos - i);
@@ -221,7 +242,7 @@ void USB2CAN::readThreadFunc()
         } 
         else 
         {
-            usleep(1000);  // 无数据时稍作延时
+            usleep(1000);
         }
     }
 }
