@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/CanUsbDevice.h
+thread
+-
+atomic
+-
+vector
+-
+string
+-
+mutex
+-
+string
+-
+functional
+-
+
+/home/robot/CanUsbDevice_demo/src/main.cpp
+CanUsbDevice.h
+/home/robot/CanUsbDevice_demo/src/CanUsbDevice.h
+csignal
+-
+atomic
+-
+iostream
+-
+thread
+-
+chrono
+-
+CanUsbDevice.h
+/home/robot/CanUsbDevice_demo/src/CanUsbDevice.h
+

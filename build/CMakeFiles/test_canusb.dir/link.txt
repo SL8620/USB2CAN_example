@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/test_canusb.dir/src/main.cpp.o  -o test_canusb   -L/home/robot/CanUsbDevice_demo/lib  -Wl,-rpath,/home/robot/CanUsbDevice_demo/lib -lCanUsbDevice -lpthread 
