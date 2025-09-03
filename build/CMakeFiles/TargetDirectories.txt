@@ -1,4 +1,7 @@
-/home/robot/USB2CAN_example/build/CMakeFiles/rebuild_cache.dir
-/home/robot/USB2CAN_example/build/CMakeFiles/edit_cache.dir
-/home/robot/USB2CAN_example/build/CMakeFiles/main.dir
-/home/robot/USB2CAN_example/build/CMakeFiles/usb2can.dir
+/home/nvidia/USB2CAN_example/build/CMakeFiles/usb2can_example.dir
+/home/nvidia/USB2CAN_example/build/CMakeFiles/edit_cache.dir
+/home/nvidia/USB2CAN_example/build/CMakeFiles/rebuild_cache.dir
+/home/nvidia/USB2CAN_example/build/CMakeFiles/list_install_components.dir
+/home/nvidia/USB2CAN_example/build/CMakeFiles/install.dir
+/home/nvidia/USB2CAN_example/build/CMakeFiles/install/local.dir
+/home/nvidia/USB2CAN_example/build/CMakeFiles/install/strip.dir

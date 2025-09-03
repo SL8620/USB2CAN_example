@@ -60,6 +60,15 @@
         "semaphore": "cpp",
         "span": "cpp",
         "stop_token": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "bitset": "cpp",
+        "complex": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp",
+        "cinttypes": "cpp",
+        "typeindex": "cpp"
     }
 }
