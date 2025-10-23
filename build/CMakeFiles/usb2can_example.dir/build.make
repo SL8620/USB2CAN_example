@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/nvidia/USB2CAN_example
+CMAKE_SOURCE_DIR = /home/nvidia/codeSpace/Bruce/USB2CAN_example
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/nvidia/USB2CAN_example/build
+CMAKE_BINARY_DIR = /home/nvidia/codeSpace/Bruce/USB2CAN_example/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/usb2can_example.dir/depend.make
@@ -72,30 +72,30 @@ include CMakeFiles/usb2can_example.dir/flags.make
 CMakeFiles/usb2can_example.dir/src/main.cpp.o: CMakeFiles/usb2can_example.dir/flags.make
 CMakeFiles/usb2can_example.dir/src/main.cpp.o: ../src/main.cpp
 CMakeFiles/usb2can_example.dir/src/main.cpp.o: CMakeFiles/usb2can_example.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nvidia/USB2CAN_example/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/usb2can_example.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/usb2can_example.dir/src/main.cpp.o -MF CMakeFiles/usb2can_example.dir/src/main.cpp.o.d -o CMakeFiles/usb2can_example.dir/src/main.cpp.o -c /home/nvidia/USB2CAN_example/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nvidia/codeSpace/Bruce/USB2CAN_example/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/usb2can_example.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/usb2can_example.dir/src/main.cpp.o -MF CMakeFiles/usb2can_example.dir/src/main.cpp.o.d -o CMakeFiles/usb2can_example.dir/src/main.cpp.o -c /home/nvidia/codeSpace/Bruce/USB2CAN_example/src/main.cpp
 
 CMakeFiles/usb2can_example.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/usb2can_example.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nvidia/USB2CAN_example/src/main.cpp > CMakeFiles/usb2can_example.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nvidia/codeSpace/Bruce/USB2CAN_example/src/main.cpp > CMakeFiles/usb2can_example.dir/src/main.cpp.i
 
 CMakeFiles/usb2can_example.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/usb2can_example.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nvidia/USB2CAN_example/src/main.cpp -o CMakeFiles/usb2can_example.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nvidia/codeSpace/Bruce/USB2CAN_example/src/main.cpp -o CMakeFiles/usb2can_example.dir/src/main.cpp.s
 
 CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o: CMakeFiles/usb2can_example.dir/flags.make
 CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o: ../src/can_usb_device.cpp
 CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o: CMakeFiles/usb2can_example.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nvidia/USB2CAN_example/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o -MF CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o.d -o CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o -c /home/nvidia/USB2CAN_example/src/can_usb_device.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nvidia/codeSpace/Bruce/USB2CAN_example/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o -MF CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o.d -o CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o -c /home/nvidia/codeSpace/Bruce/USB2CAN_example/src/can_usb_device.cpp
 
 CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nvidia/USB2CAN_example/src/can_usb_device.cpp > CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nvidia/codeSpace/Bruce/USB2CAN_example/src/can_usb_device.cpp > CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.i
 
 CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nvidia/USB2CAN_example/src/can_usb_device.cpp -o CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nvidia/codeSpace/Bruce/USB2CAN_example/src/can_usb_device.cpp -o CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.s
 
 # Object files for target usb2can_example
 usb2can_example_OBJECTS = \
@@ -109,7 +109,7 @@ usb2can_example: CMakeFiles/usb2can_example.dir/src/main.cpp.o
 usb2can_example: CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o
 usb2can_example: CMakeFiles/usb2can_example.dir/build.make
 usb2can_example: CMakeFiles/usb2can_example.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/nvidia/USB2CAN_example/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable usb2can_example"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/nvidia/codeSpace/Bruce/USB2CAN_example/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable usb2can_example"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/usb2can_example.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -121,6 +121,6 @@ CMakeFiles/usb2can_example.dir/clean:
 .PHONY : CMakeFiles/usb2can_example.dir/clean
 
 CMakeFiles/usb2can_example.dir/depend:
-	cd /home/nvidia/USB2CAN_example/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/nvidia/USB2CAN_example /home/nvidia/USB2CAN_example /home/nvidia/USB2CAN_example/build /home/nvidia/USB2CAN_example/build /home/nvidia/USB2CAN_example/build/CMakeFiles/usb2can_example.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/nvidia/codeSpace/Bruce/USB2CAN_example/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/nvidia/codeSpace/Bruce/USB2CAN_example /home/nvidia/codeSpace/Bruce/USB2CAN_example /home/nvidia/codeSpace/Bruce/USB2CAN_example/build /home/nvidia/codeSpace/Bruce/USB2CAN_example/build /home/nvidia/codeSpace/Bruce/USB2CAN_example/build/CMakeFiles/usb2can_example.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/usb2can_example.dir/depend
 

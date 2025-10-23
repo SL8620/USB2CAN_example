@@ -18,7 +18,6 @@
 
 namespace can_usb_driver 
 {
-
     struct CanMessage 
     {
         uint8_t canPort;
@@ -30,7 +29,6 @@ namespace can_usb_driver
     class CanUsbDevice 
     {
     public:
-        // 现在可以正确定义回调类型
         using CanMessageCallback = std::function<void(const CanUsbDevice*, const CanMessage&)>;
 
         std::string devName_;
@@ -49,6 +47,7 @@ namespace can_usb_driver
         
         uint64_t getFramesSent() const { return framesSent_; }
         uint64_t getFramesReceived() const { return framesReceived_; }
+        uint64_t getFramesInvalid() const { return framesInvalid_; }
 
     private:
         struct TxQueue 
@@ -60,7 +59,6 @@ namespace can_usb_driver
         void txThreadFunc(int interval_us);
         void receiveLoop();
         ssize_t writeAll(const uint8_t* data, size_t len);
-        bool parseBuffer(std::vector<uint8_t>& buffer, CanMessage& msg);
         bool tryParseOneFrame(RingBuffer<16384>& rb, CanMessage& msg);
 
         std::string devicePath_;
@@ -71,12 +69,12 @@ namespace can_usb_driver
         
         std::atomic<uint64_t> framesSent_{0};
         std::atomic<uint64_t> framesReceived_{0};
+        std::atomic<uint64_t> framesInvalid_{0};
         
-        std::array<TxQueue, 3> tx_queues_; // Index 1 and 2 used for CanPort_1 and CanPort_2
+        std::array<TxQueue, 3> tx_queues_;
         std::condition_variable tx_cv_;
         std::mutex tx_cv_mtx_;
         std::atomic<bool> runningTx_{false};
         std::atomic<bool> runningRx_{false};
     };
-
 } // namespace can_usb_driver

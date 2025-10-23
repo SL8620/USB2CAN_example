@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/nvidia/USB2CAN_example/src/can_usb_device.cpp" "CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o" "gcc" "CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o.d"
-  "/home/nvidia/USB2CAN_example/src/main.cpp" "CMakeFiles/usb2can_example.dir/src/main.cpp.o" "gcc" "CMakeFiles/usb2can_example.dir/src/main.cpp.o.d"
+  "/home/nvidia/codeSpace/Bruce/USB2CAN_example/src/can_usb_device.cpp" "CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o" "gcc" "CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o.d"
+  "/home/nvidia/codeSpace/Bruce/USB2CAN_example/src/main.cpp" "CMakeFiles/usb2can_example.dir/src/main.cpp.o" "gcc" "CMakeFiles/usb2can_example.dir/src/main.cpp.o.d"
   )
 
 # Targets to which this target links.
