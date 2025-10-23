@@ -1,3 +1,0 @@
-/home/nvidia/codeSpace/Bruce/USB2CAN_example/build/CMakeFiles/usb2can_example.dir
-/home/nvidia/codeSpace/Bruce/USB2CAN_example/build/CMakeFiles/edit_cache.dir
-/home/nvidia/codeSpace/Bruce/USB2CAN_example/build/CMakeFiles/rebuild_cache.dir

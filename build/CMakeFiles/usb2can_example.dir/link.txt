@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/usb2can_example.dir/src/main.cpp.o CMakeFiles/usb2can_example.dir/src/can_usb_device.cpp.o -o usb2can_example 
